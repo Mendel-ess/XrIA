@@ -31,11 +31,17 @@ export interface Objective {
     description: string;
     details: string[];
     accuracy?: string;
-  }
-  
+}
+
 export interface Disease {
     name: string;
     description: string;
     accuracy: string;
     icon: React.ReactNode;
-  }
+}
+
+export interface AnalysisResult {
+    disease: string;
+    confidence: number;
+    description: string;
+}
