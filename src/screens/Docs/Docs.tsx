@@ -1,5 +1,6 @@
 import React from 'react';
 import { Brain, Download } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Docs: React.FC = () => {
 
@@ -30,6 +31,16 @@ export const Docs: React.FC = () => {
                             <Download className="mr-2 h-5 w-5" />
                             Descargar Documentación
                         </button>
+                    </div>
+                    <div className="mt-10">
+                        <Link to="/docs" >
+                        <button
+                            className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 md:text-lg"
+                            onClick={handleDownload}
+                        >
+                            Ver documentacion en linea
+                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
