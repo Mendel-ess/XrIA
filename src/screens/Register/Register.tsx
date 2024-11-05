@@ -1,16 +1,49 @@
 import React, { useState } from 'react';
-import { Brain, User, Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Register: React.FC = () => {
     const [formData, setFormData] = useState({
-        names: '',
+        first_name: '',
+        last_name: '',
         username: '',
         email: '',
         password: '',
         confirmPassword: ''
     });
+
+    const [errors, setErrors] = useState({
+        first_name: '',
+        last_name: '',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+
     const [isLoading, setIsLoading] = useState(false);
+
+    const validateField = (name: string, value: string): string => {
+        switch (name) {
+            case 'first_name':
+                return value.length < 2 ? 'El nombre debe tener al menos 2 caracteres' : '';
+            case 'last_name':
+                return value.length < 2 ? 'El apellido debe tener al menos 2 caracteres' : '';
+            case 'username':
+                return !/^[a-zA-Z0-9_]{4,20}$/.test(value) 
+                    ? 'El usuario debe tener entre 4 y 20 caracteres alfanuméricos' : '';
+            case 'email':
+                return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+                    ? 'Ingrese un correo electrónico válido' : '';
+            case 'password':
+                return !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(value)
+                    ? 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número' : '';
+            case 'confirmPassword':
+                return value !== formData.password ? 'Las contraseñas no coinciden' : '';
+            default:
+                return '';
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -18,15 +51,38 @@ export const Register: React.FC = () => {
             ...prev,
             [name]: value
         }));
+        
+        setErrors(prev => ({
+            ...prev,
+            [name]: validateField(name, value),
+            ...(name === 'password' ? {
+                confirmPassword: validateField('confirmPassword', formData.confirmPassword)
+            } : {})
+        }));
+    };
+
+    const isFormValid = () => {
+        return Object.values(errors).every(error => error === '') &&
+               Object.values(formData).every(value => value !== '');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!isFormValid()) return;
+        
         setIsLoading(true);
         
         try {
-            // Implement your registration logic here
-            console.log('Registration attempt with:', formData);
+            const payload = {
+                username: formData.username,
+                email: formData.email,
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                password: formData.password,
+                role: 'free'
+            };
+
+            console.log('Registration payload:', payload);
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
         } catch (error) {
@@ -36,10 +92,42 @@ export const Register: React.FC = () => {
         }
     };
 
+    const renderInput = (
+        id: string,
+        label: string,
+        type: string,
+        placeholder: string,
+        Icon: React.ElementType
+    ) => (
+        <div>
+            <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+                {label}
+            </label>
+            <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Icon className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                    id={id}
+                    name={id}
+                    type={type}
+                    required
+                    value={formData[id as keyof typeof formData]}
+                    onChange={handleChange}
+                    className={`pl-10 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        errors[id as keyof typeof errors] ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder={placeholder}
+                />
+            </div>
+            {errors[id as keyof typeof errors] && (
+                <p className="mt-1 text-sm text-red-500">{errors[id as keyof typeof errors]}</p>
+            )}
+        </div>
+    );
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        
-            {/* Registration Form Section */}
             <div className="max-w-md mx-auto px-4 py-16">
                 <div className="bg-white shadow-xl rounded-lg p-8">
                     <div className="text-center mb-8">
@@ -52,121 +140,17 @@ export const Register: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Nombres */}
-                        <div>
-                            <label htmlFor="names" className="block text-sm font-medium text-gray-700">
-                                Nombres completos
-                            </label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="names"
-                                    name="names"
-                                    type="text"
-                                    required
-                                    value={formData.names}
-                                    onChange={handleChange}
-                                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Juan Pérez"
-                                />
-                            </div>
-                        </div>
+                        {renderInput('first_name', 'Nombres', 'text', 'Juan', User)}
+                        {renderInput('last_name', 'Apellidos', 'text', 'Pérez', User)}
+                        {renderInput('username', 'Nombre de usuario', 'text', 'juanperez', User)}
+                        {renderInput('email', 'Correo Electrónico', 'email', 'usuario@ejemplo.com', Mail)}
+                        {renderInput('password', 'Contraseña', 'password', '••••••••', Lock)}
+                        {renderInput('confirmPassword', 'Confirmar Contraseña', 'password', '••••••••', Lock)}
 
-                        {/* Usuario */}
-                        <div>
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                                Nombre de usuario
-                            </label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="username"
-                                    name="username"
-                                    type="text"
-                                    required
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="juanperez"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Email */}
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                Correo Electrónico
-                            </label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="usuario@ejemplo.com"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Contraseña */}
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Contraseña
-                            </label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Confirmar Contraseña */}
-                        <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                                Confirmar Contraseña
-                            </label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    type="password"
-                                    required
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Botón de registro */}
                         <div>
                             <button
                                 type="submit"
-                                disabled={isLoading}
+                                disabled={isLoading || !isFormValid()}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? (

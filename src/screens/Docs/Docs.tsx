@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Brain, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { docsService } from '../../api';
 
 export const Docs: React.FC = () => {
+    const [isLoading, setIsLoading] = useState(false);
 
 
-    const handleDownload = (): void => {
-        // Implement download logic here
-        console.log('Download documentation clicked');
+    const handleDownloadPdf = async () => {
+        try {
+            setIsLoading(true);
+            await docsService.downloadPdf();
+        } catch (error) {
+            console.error('Error al descargar PDF:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -26,7 +34,7 @@ export const Docs: React.FC = () => {
                     <div className="mt-10">
                         <button
                             className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 md:text-lg"
-                            onClick={handleDownload}
+                            onClick={handleDownloadPdf}
                         >
                             <Download className="mr-2 h-5 w-5" />
                             Descargar Documentación
@@ -36,7 +44,7 @@ export const Docs: React.FC = () => {
                         <Link to="/docs" >
                         <button
                             className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 md:text-lg"
-                            onClick={handleDownload}
+                            onClick={handleDownloadPdf}
                         >
                             Ver documentacion en linea
                         </button>

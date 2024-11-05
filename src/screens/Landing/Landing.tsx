@@ -1,10 +1,11 @@
 import React from 'react';
 import { Activity, Brain, Upload, Shield, ChevronRight } from 'lucide-react';
 import { Feature, NavLink } from '../../types/global';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export const Landing: React.FC = () => {
+  const navigate = useNavigate();
     // Navigation links data
   const navLinks: NavLink[] = [
     { text: 'Inicio', href: '/' },
@@ -33,19 +34,14 @@ export const Landing: React.FC = () => {
   ];
 
   const handleLogin = (): void => {
-    // Implement login logic here
-    console.log('Login clicked');
+    navigate('/login');
   };
 
   const handleGetStarted = (): void => {
-    // Implement get started logic here
-    console.log('Get started clicked');
+    navigate('/login');
   };
 
-  const handleRequestDemo = (): void => {
-    // Implement request demo logic here
-    console.log('Demo requested');
-  };
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
           {/* Navigation */}
@@ -119,25 +115,6 @@ export const Landing: React.FC = () => {
             </div>
           </div>
     
-          {/* CTA Section */}
-          <div className="bg-blue-600">
-            <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                  ¿Listo para revolucionar tu diagnóstico?
-                </h2>
-                <p className="mt-4 text-lg text-blue-100">
-                  Únete a los miles de profesionales médicos que ya confían en nuestra tecnología.
-                </p>
-                <button 
-                  className="mt-8 bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100"
-                  onClick={handleRequestDemo}
-                >
-                  Solicitar Demo
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       );
 }
