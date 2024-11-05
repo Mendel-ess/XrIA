@@ -16,7 +16,7 @@ export const Docs: React.FC = () => {
             {/* Documentation Section */}
             <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
                 <div className="text-center">
-                    <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                    <h1 className="text-4xl tracking-tight font-extra</div>bold text-gray-900 sm:text-5xl md:text-6xl">
                         <span className="block">Documentación</span>
                         <span className="block text-blue-600">XR AI</span>
                     </h1>
