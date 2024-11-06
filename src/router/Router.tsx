@@ -7,6 +7,7 @@ import { Register } from "../screens/Register/Register";
 import { Pricing } from "../screens/Pricing/Pricing";
 import { Goals } from "../screens/Goals/Goals";
 import { Docs } from "../screens/Docs/Docs";
+import { Layout } from "../Layout/Layout";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -15,11 +16,11 @@ export const AppRouter = createBrowserRouter([
   },
   {
     path: "/landing",
-    element: <Landing />
+    element: <Layout><Landing /></Layout>
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Layout> <Login /> </Layout>
   },
   {
     path: "/model-ui",
@@ -31,18 +32,18 @@ export const AppRouter = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <Register />
+    element: <Layout><Register /></Layout>
   },
   {
     path: "/pricing",
-    element: <Pricing />
+    element: <Layout><Pricing /></Layout>
   },
   {
     path: "/goals",
-    element: <Goals />
+    element: <Layout><Goals /></Layout>
   },
   {
     path: "/docs",
-    element: <Docs />
+    element: <Layout><Docs /></Layout>
   }
 ]);

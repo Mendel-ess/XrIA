@@ -10,7 +10,10 @@ export const Docs: React.FC = () => {
     const handleDownloadPdf = async () => {
         try {
             setIsLoading(true);
-            await docsService.downloadPdf();
+            const result = await docsService.downloadPdf('mi-documento.pdf');
+            if (!result.success) {
+              console.error(result.error);
+            }
         } catch (error) {
             console.error('Error al descargar PDF:', error);
         } finally {

@@ -22,3 +22,10 @@ export interface RegisterResponse {
     username: string;
     email: string;
 }
+
+export interface PDFResponse {
+    success: boolean;
+    error?: string;
+    blob?: Blob;
+  }
+  

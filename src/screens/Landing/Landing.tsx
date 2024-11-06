@@ -1,19 +1,12 @@
 import React from 'react';
-import { Activity, Brain, Upload, Shield, ChevronRight } from 'lucide-react';
-import { Feature, NavLink } from '../../types/global';
-import { Link, useNavigate } from 'react-router-dom';
+import { Activity, Upload, Shield, ChevronRight } from 'lucide-react';
+import { Feature} from '../../types/global';
+import { useNavigate } from 'react-router-dom';
 
 
 export const Landing: React.FC = () => {
-  const navigate = useNavigate();
-    // Navigation links data
-  const navLinks: NavLink[] = [
-    { text: 'Inicio', href: '/' },
-    { text: 'Pricing', href: '/pricing' },
-    { text: 'Objetivos', href: '/goals' },
-    { text: 'Documentacion', href: '/docs' }
-  ];
 
+  const navigate = useNavigate();
   // Features data
   const features: Feature[] = [
     {
@@ -33,10 +26,6 @@ export const Landing: React.FC = () => {
     }
   ];
 
-  const handleLogin = (): void => {
-    navigate('/login');
-  };
-
   const handleGetStarted = (): void => {
     navigate('/login');
   };
@@ -44,35 +33,7 @@ export const Landing: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-          {/* Navigation */}
-          <nav className="bg-white shadow">
-            <div className="max-w-7xl mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Brain className="h-8 w-8 text-blue-600" />
-                  <span className="ml-2 text-xl font-bold text-gray-900">XR AI</span>
-                </div>
-                <div className="hidden md:flex space-x-8">
-                  {navLinks.map((link, index) => (
-                    <Link 
-                      key={index}
-                      to={link.href}
-                      className="text-gray-600 hover:text-blue-600"
-                    >
-                      {link.text}
-                    </Link >
-                  ))}
-                </div>
-                <button 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                  onClick={handleLogin}
-                >
-                  Iniciar Sesión
-                </button>
-              </div>
-            </div>
-          </nav>
-    
+          
           {/* Hero Section */}
           <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
             <div className="text-center">
